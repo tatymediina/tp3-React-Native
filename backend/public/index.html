@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Saludo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>¡Bienvenido!</h1>
+  <input type="text" id="nombre" placeholder="Ingresa tu nombre">
+  <button onclick="obtenerSaludo()">Enviar</button>
+  <div id="respuesta"></div>
+
+  <script>
+    function obtenerSaludo() {
+      const nombre = document.getElementById('nombre').value;
+      if (nombre.trim() === "") {
+        alert("Por favor ingresa un nombre.");
+        return;
+      }
+
+      fetch(`/saludo/${encodeURIComponent(nombre)}`)
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('respuesta').innerText = data;
+        })
+        .catch(error => {
+          console.error("Error al obtener el saludo:", error);
+        });
+    }
+  </script>
+</body>
+</html>

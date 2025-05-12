@@ -6,22 +6,39 @@ import cors from 'cors';
 app.use(cors());
 app.use(express.static('public'));
 
+const usuariosValidos = ['Tatiana', 'Ailin', 'Ezequiel', 'Selene', 'Mariano', 'Brandon', 'Nazarena', 'Axel'];
 
 app.get('/saludo/:nombre', (req, res) => {
   const { nombre } = req.params;
-  res.json({ mensaje: `Hola, ${nombre}!` }); 
+  res.json({ mensaje: `¡Bienvenido/a, ${nombre}!` }); 
 });
-
 
 app.get('/validar/:nombre', (req, res) => {
   const { nombre } = req.params;
-  const nombreValido = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]{2,}$/.test(nombre);
 
-  if (nombreValido) {
-    res.json({ valido: true, mensaje: "El nombre es válido" });
-  } else {
-    res.json({ valido: false, mensaje: "El nombre no es válido" });
+  const formatoValido = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]{2,}$/.test(nombre);
+  
+  if (!formatoValido) {
+    return res.json({ 
+      valido: false, 
+      mensaje: "El nombre no tiene un formato válido" 
+    });
   }
+
+  const nombreEncontrado = usuariosValidos.find(
+    user => user.toLowerCase() === nombre.toLowerCase()
+  );
+
+  if (!nombreEncontrado) {
+    return res.json({ 
+      valido: false, 
+      mensaje: "Usuario no encontrado" 
+    });
+  }
+  res.json({ 
+    valido: true, 
+    mensaje: `Usuario válido: ${nombreEncontrado}` 
+  });
 });
 
 app.listen(port, () => {
